@@ -17549,3 +17549,11 @@ Top Bid: 9.85 x 1
 Top Bid: 9.85 x 1
 Top Ask: 17.93 x 1
 [ADD] Order ID 643783525: Bid 100 @ 9.84
+[DBG] EOF: Processing remaining buffered row. Action: A, Order ID: 643783529
+Top Bid: 9.85 x 1
+Top Ask: 17.93 x 1
+[ADD] Order ID 643783529: Ask 100 @ 17.85
+[DBG] EOF: Processing remaining buffered row. Action: A, Order ID: 644971685
+Top Bid: 9.85 x 1
+Top Ask: 17.85 x 1
+[ADD] Order ID 644971685: Ask 60 @ 16.25

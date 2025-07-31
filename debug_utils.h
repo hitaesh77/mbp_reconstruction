@@ -76,3 +76,14 @@ inline void debug_log_process_tfc(char side, std::vector<std::string> cancel_row
 #else
 inline void debug_log_process_tfc(char, std::vector<std::string>){}
 #endif
+
+// DEBUG PRINT FOR PROCESSING TFC CANCEL
+#ifdef DEBUG
+inline void debug_log_eof_buffer(std::deque<std::vector<std::string>> buffer_rows){
+    if (debug_log_file.is_open()) {
+        debug_log_file << "[DBG] EOF: Processing remaining buffered row. Action: " << buffer_rows.front()[5] << ", Order ID: " << buffer_rows.front()[10] << std::endl;
+    }
+}
+#else
+inline void debug_log_eof_buffer(std::deque<std::vector<std::string>> buffer_rows){}
+#endif

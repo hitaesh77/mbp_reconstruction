@@ -59,6 +59,13 @@ public:
 
             add_to_buffer(row);
         }
+
+        // cleanup eof buffer
+        while (!buffer_rows.empty()) {
+            debug_log_eof_buffer(buffer_rows);
+            process_row(buffer_rows.front());
+            buffer_rows.pop_front();
+        }
     }
 
 private:
