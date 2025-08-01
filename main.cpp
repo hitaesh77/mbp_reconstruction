@@ -210,6 +210,14 @@ private:
                 break;
         }
 
+        #ifdef DEBUG
+        bool in_top = side == 'A' ? price_in_top_n(asks, price) : price_in_top_n(bids, price);
+        if (!book_changed && in_top) {
+            debug_log_file << "[WARN] Missed book change for top-10 price: " << price << " at row: " << row_index << "\n";
+        }
+        #endif
+
+
         if (book_changed) {
             int depth = calculate_depth(side, price);
             get_snapshot(row, action, side, depth, price, size, order_id);
@@ -325,21 +333,11 @@ private:
         std::map<double, std::list<int>, std::greater<>> *book = nullptr;
         if (side == 'A') {
             asks[price].push_back(order_id);
-            
-            int level = 0;
-            for (const auto& [p, _] : asks) {
-                if (++level > 10) break;
-                if (p == price) return true;
-            }
+            return price_in_top_n(asks, price);
 
         } else if (side == 'B') {
             bids[price].push_back(order_id);
-            
-            int level = 0;
-            for (const auto& [p, _] : bids) {
-                if (++level > 10) break;
-                if (p == price) return true;
-            }   
+            return price_in_top_n(bids, price);
         }
 
         return false;
@@ -353,47 +351,42 @@ private:
         double price = order_to_cancel.price;
         char side = order_to_cancel.side;
 
-        bool was_in_top_10 = false;
+        bool was_in_top = false;
+        bool is_in_top = false;
 
         if (side == 'A') {
+            was_in_top = price_in_top_n(asks, price);
+
             auto price_it = asks.find(price);
             if (price_it != asks.end()) {
-
-                // book changed logic
-                int level = 1;
-                for (auto it = asks.begin(); it != price_it && level <= 10; ++it, ++level) {}
-                was_in_top_10 = (level <= 10);
-                
-                // remove order logic
                 price_it->second.remove(order_id);
                 if (price_it->second.empty()) {
                     asks.erase(price_it);
                 }
             }
 
+            is_in_top = price_in_top_n(asks, price);
+
         } else if (side == 'B') {
+            was_in_top = price_in_top_n(bids, price);
+
             auto price_it = bids.find(price);
             if (price_it != bids.end()) {
-
-                // book changed logic
-                int level = 1;
-                for (auto it = bids.begin(); it != price_it && level <= 10; ++it, ++level) {}
-                was_in_top_10 = (level <= 10);
-                
-
-                // remove order logic
                 price_it->second.remove(order_id);
                 if (price_it->second.empty()) {
                     bids.erase(price_it);
                 }
             }
+
+            is_in_top = price_in_top_n(bids, price);
         }
 
         orders.erase(order_id);
 
-        return was_in_top_10;
+        return was_in_top || is_in_top;
     }
 
+    // CLASS HELP FUNCTIONS
     int sum_size(std::list<int>& order_ids) {
         int total = 0;
         for (int id : order_ids) {
@@ -402,6 +395,15 @@ private:
         return total;
     }
 
+    template<typename BookType>
+    bool price_in_top_n(const BookType& book, double price, int N = 10) {
+        int count = 0;
+        for (const auto& [p, _] : book) {
+            if (count++ > N) break;
+            if (p == price) return true;
+        }
+        return false;
+    }
 };
 
 int main(int argc, char *argv[]) {
