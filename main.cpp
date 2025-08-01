@@ -19,14 +19,25 @@ using namespace std;
         a) Use loadCSV function to go through entire orderbook
         b) Use process row to build the actual orderbook
         c) Use an unordered map (key val pair), to keep track of orders and order_id with O(1) lookup
-        d) Use ordered map to keep trakc of price levels, since a tree is used for these, O(logn) operations
+        d) Use ordered map to keep track of price levels, since a tree is used for these, O(logn) operations
             i) "top" of bid should be highest bid
             ii) "top" of asks should be lowest ask
+    
+    2) Build logic to handle T-F-C MBO sequences
+        a) Use existing process_row() function for actions that are not 'T'
+        b) When 'T' encountered, use a queue of size 3 to track T-F-C
+            i) Implement logic for ask side 'N'
+    
+    3) Build output CSV using the internal orderbook we build
+        a) create a snapshot at every row that is processed
+        b) start by printing it in a output_logs.txt file to cross referene with mbp.csv
+        c) build output csv
 
  ----------------------------------------------------------------------------------------------------------- */
 
 #ifdef DEBUG
-std::ofstream debug_log_file("logs.txt", std::ios::trunc); // Only in DEBUG builds
+std::ofstream debug_log_file("logs.txt", std::ios::trunc);
+std::ofstream debug_log_mbp_file("mbp_logs.txt", std::ios::trunc);
 #endif
 
 struct Order
@@ -41,6 +52,8 @@ class OrderBook
 public:
     void load_csv(const std::string &filename)
     {
+        debug_log_mbp_header();
+
         std::ifstream file(filename);
         std::string line;
 
@@ -130,13 +143,6 @@ private:
             return;
         }
 
-        // std::cout << "start block" << endl;
-        // std::cout << trade_row[10] << endl;
-        // std::cout << fill_row[10] << endl;
-        // std::cout << cancel_row[10] << endl;
-        // std::cout << "end block" << endl;
-
-        // Process only the Cancel action (which affects the orderbook)
         debug_log_process_tfc(trade_side, cancel_row);
         
         process_row(cancel_row);
@@ -156,6 +162,8 @@ private:
         int size = std::stoi(row[8]);
         int order_id = std::stoi(row[10]);
 
+        get_snapshot(order_id, action, side, 0, price, size);
+
         switch(action){
             case 'A':
                 debug_log_order_add(order_id, side, size, price);
@@ -172,6 +180,38 @@ private:
             default:
                 break;
         }
+    }
+
+    void get_snapshot(int order_id, char action, char side, int depth, double price, int size){
+        auto bid_it = bids.begin();
+        auto ask_it = asks.begin();
+
+        debug_log_mbp_oasps(order_id, action, side, depth, price, size);
+
+        for (int price_level = 0; price_level < 10; price_level++){
+            std::string bid_px = "", bid_sz = "", bid_ct = "";
+            std::string ask_px = "", ask_sz = "", ask_ct = "";
+            
+            if (bid_it != bids.end()){
+                bid_px = std::to_string(bid_it->first);
+                bid_sz = std::to_string(sum_size(bid_it->second));
+                bid_ct = std::to_string(bid_it->second.size());
+                bid_it++;
+            }
+
+            if (ask_it != asks.end()){
+                ask_px = std::to_string(ask_it->first);
+                ask_sz = std::to_string(sum_size(ask_it->second));
+                ask_ct = std::to_string(ask_it->second.size());
+                ask_it++;
+            }
+
+            debug_log_levels(bid_px, bid_sz, bid_ct, ask_px, ask_sz, ask_ct);
+        }
+
+        #ifdef DEBUG
+        debug_log_mbp_file << std::endl;
+        #endif
     }
 
     void add_order(int order_id, double price, char side, int size){
@@ -205,6 +245,15 @@ private:
 
         orders.erase(order_id);
     }
+
+    int sum_size(std::list<int>& order_ids) {
+        int total = 0;
+        for (int id : order_ids) {
+            total += orders.at(id).size;
+        }
+        return total;
+    }
+
 };
 
 int main(int argc, char *argv[])
