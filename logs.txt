@@ -2110,8 +2110,6 @@ Top Ask: 14.01 x 1
 [CANCEL] Order ID 44570585: Bid  @ 700
 Top Bid: 13.38 x 1
 Top Ask: 14.01 x 1
-Top Bid: 13.38 x 1
-Top Ask: 14.01 x 1
 [ADD] Order ID 223347833: Ask 1 @ 13.71
 Top Bid: 13.38 x 1
 Top Ask: 13.71 x 1
@@ -2679,14 +2677,6 @@ Top Ask: 13.83 x 1
 [ADD] Order ID 288723817: Bid 100 @ 12.36
 Top Bid: 13.26 x 1
 Top Ask: 13.83 x 1
-Top Bid: 13.26 x 1
-Top Ask: 13.83 x 1
-Top Bid: 13.26 x 1
-Top Ask: 13.83 x 1
-Top Bid: 13.26 x 1
-Top Ask: 13.83 x 1
-Top Bid: 13.26 x 1
-Top Ask: 13.83 x 1
 [ADD] Order ID 288724173: Ask 50 @ 13.81
 Top Bid: 13.26 x 1
 Top Ask: 13.81 x 1
@@ -2694,8 +2684,6 @@ Top Ask: 13.81 x 1
 Top Bid: 13.23 x 1
 Top Ask: 13.81 x 1
 [ADD] Order ID 288724201: Ask 2 @ 13.78
-Top Bid: 13.23 x 1
-Top Ask: 13.78 x 1
 Top Bid: 13.23 x 1
 Top Ask: 13.78 x 1
 [ADD] Order ID 288724225: Bid 10 @ 13.31
@@ -2765,8 +2753,6 @@ Top Ask: 13.8 x 1
 Top Bid: 13.31 x 1
 Top Ask: 13.8 x 1
 [ADD] Order ID 289056097: Ask 100 @ 13.81
-Top Bid: 13.31 x 1
-Top Ask: 13.8 x 1
 Top Bid: 13.31 x 1
 Top Ask: 13.8 x 1
 [ADD] Order ID 289056353: Ask 100 @ 13.81
@@ -4134,10 +4120,6 @@ Top Ask: 13.6 x 1
 [ADD] Order ID 311979125: Ask 2 @ 13.89
 Top Bid: 13.04 x 1
 Top Ask: 13.6 x 1
-Top Bid: 13.04 x 1
-Top Ask: 13.6 x 1
-Top Bid: 13.04 x 1
-Top Ask: 13.6 x 1
 [CANCEL] Order ID 310446249: Ask  @ 100
 Top Bid: 13.04 x 1
 Top Ask: 13.64 x 1
@@ -4279,14 +4261,6 @@ Top Ask: 13.87 x 1
 [CANCEL] Order ID 316911465: Bid  @ 10
 Top Bid: 13.28 x 1
 Top Ask: 13.87 x 1
-Top Bid: 13.28 x 1
-Top Ask: 13.87 x 1
-Top Bid: 13.28 x 1
-Top Ask: 13.87 x 1
-Top Bid: 13.28 x 1
-Top Ask: 13.87 x 1
-Top Bid: 13.28 x 1
-Top Ask: 13.87 x 1
 [CANCEL] Order ID 312773881: Ask  @ 100
 Top Bid: 13.28 x 1
 Top Ask: 14.1 x 1
@@ -4317,8 +4291,6 @@ Top Ask: 14.1 x 1
 [ADD] Order ID 320000233: Ask 100 @ 14.11
 Top Bid: 13.28 x 1
 Top Ask: 14.1 x 1
-Top Bid: 13.28 x 1
-Top Ask: 14.1 x 1
 [ADD] Order ID 320484625: Ask 4 @ 13.76
 Top Bid: 13.28 x 1
 Top Ask: 13.76 x 1
@@ -4329,8 +4301,6 @@ Top Ask: 13.76 x 1
 Top Bid: 13.28 x 1
 Top Ask: 13.76 x 1
 [CANCEL] Order ID 316924721: Bid  @ 100
-Top Bid: 13.04 x 1
-Top Ask: 13.76 x 1
 Top Bid: 13.04 x 1
 Top Ask: 13.76 x 1
 [ADD] Order ID 320484661: Ask 100 @ 13.79
@@ -4876,12 +4846,6 @@ Top Ask: 13.55 x 1
 [ADD] Order ID 325177757: Ask 100 @ 14.51
 Top Bid: 13.04 x 1
 Top Ask: 13.55 x 1
-Top Bid: 13.04 x 1
-Top Ask: 13.55 x 1
-Top Bid: 13.04 x 1
-Top Ask: 13.55 x 1
-Top Bid: 13.04 x 1
-Top Ask: 13.55 x 1
 [CANCEL] Order ID 322898193: Ask  @ 2
 Top Bid: 13.04 x 1
 Top Ask: 13.55 x 1
@@ -5074,11 +5038,7 @@ Top Ask: 13.83 x 1
 [ADD] Order ID 325718477: Ask 5 @ 13.91
 Top Bid: 13.27 x 1
 Top Ask: 13.83 x 1
-Top Bid: 13.27 x 1
-Top Ask: 13.83 x 1
 [ADD] Order ID 325718485: Ask 100 @ 13.84
-Top Bid: 13.27 x 1
-Top Ask: 13.83 x 1
 Top Bid: 13.27 x 1
 Top Ask: 13.83 x 1
 [CANCEL] Order ID 325715113: Ask  @ 100
@@ -5169,8 +5129,6 @@ Top Ask: 13.79 x 1
 Top Bid: 13.26 x 1
 Top Ask: 13.8 x 1
 [CANCEL] Order ID 325714721: Ask  @ 15
-Top Bid: 13.26 x 1
-Top Ask: 13.8 x 1
 Top Bid: 13.26 x 1
 Top Ask: 13.8 x 1
 [CANCEL] Order ID 325718821: Bid  @ 100
@@ -5429,8 +5387,6 @@ Top Ask: 13.87 x 2
 Top Bid: 13.12 x 2
 Top Ask: 13.87 x 2
 [ADD] Order ID 326899125: Ask 100 @ 13.88
-Top Bid: 13.12 x 2
-Top Ask: 13.87 x 2
 Top Bid: 13.12 x 2
 Top Ask: 13.87 x 2
 [ADD] Order ID 327112281: Ask 53 @ 14.25
@@ -7837,8 +7793,6 @@ Top Ask: 13.74 x 1
 Top Bid: 13.11 x 1
 Top Ask: 13.74 x 1
 [ADD] Order ID 341671053: Ask 100 @ 14.36
-Top Bid: 13.11 x 1
-Top Ask: 13.74 x 1
 Top Bid: 13.11 x 1
 Top Ask: 13.74 x 1
 [CANCEL] Order ID 336572057: Bid  @ 100
@@ -12390,8 +12344,6 @@ Processing T-F-C sequence: Trade on B side, canceling order 390012185
 Top Bid: 12.48 x 1
 Top Ask: 13.23 x 1
 [CANCEL] Order ID 390012185: Ask  @ 15
-Top Bid: 12.48 x 1
-Top Ask: 13.25 x 2
 Processing T-F-C sequence: Trade on B side, canceling order 389031981
 Top Bid: 12.48 x 1
 Top Ask: 13.25 x 2
@@ -13677,8 +13629,6 @@ Top Ask: 13.36 x 1
 [ADD] Order ID 534450577: Bid 6 @ 12.9
 Top Bid: 12.9 x 1
 Top Ask: 13.36 x 1
-Top Bid: 12.9 x 1
-Top Ask: 13.36 x 1
 [CANCEL] Order ID 466717245: Ask  @ 10
 Top Bid: 12.9 x 1
 Top Ask: 13.36 x 1
@@ -14187,8 +14137,6 @@ Top Ask: 13.24 x 2
 [ADD] Order ID 550218121: Bid 20 @ 12.65
 Top Bid: 12.65 x 1
 Top Ask: 13.24 x 2
-Top Bid: 12.65 x 1
-Top Ask: 13.24 x 2
 [CANCEL] Order ID 550218121: Bid  @ 20
 Top Bid: 12.46 x 1
 Top Ask: 13.24 x 2
@@ -14577,8 +14525,6 @@ Top Ask: 13.11 x 3
 Top Bid: 12.36 x 1
 Top Ask: 13.11 x 3
 [ADD] Order ID 569594549: Ask 100 @ 13.23
-Top Bid: 12.36 x 1
-Top Ask: 13.11 x 3
 Top Bid: 12.36 x 1
 Top Ask: 13.11 x 3
 [CANCEL] Order ID 568647825: Bid  @ 100
@@ -15797,8 +15743,6 @@ Top Ask: 12.98 x 1
 [ADD] Order ID 581347621: Ask 100 @ 13.1
 Top Bid: 12.43 x 1
 Top Ask: 12.98 x 1
-Top Bid: 12.43 x 1
-Top Ask: 12.98 x 1
 [CANCEL] Order ID 581347621: Ask  @ 100
 Top Bid: 12.43 x 1
 Top Ask: 12.98 x 1
@@ -16172,8 +16116,6 @@ Top Ask: 12.7 x 1
 [ADD] Order ID 583172413: Ask 2 @ 13.1
 Top Bid: 12.26 x 1
 Top Ask: 12.7 x 1
-Top Bid: 12.26 x 1
-Top Ask: 12.7 x 1
 [CANCEL] Order ID 582842773: Ask  @ 20
 Top Bid: 12.26 x 1
 Top Ask: 12.7 x 1
@@ -16234,18 +16176,10 @@ Top Ask: 12.64 x 1
 [ADD] Order ID 583722693: Ask 2 @ 13.02
 Top Bid: 12.26 x 1
 Top Ask: 12.64 x 1
-Top Bid: 12.26 x 1
-Top Ask: 12.64 x 1
-Top Bid: 12.26 x 1
-Top Ask: 12.64 x 1
 [ADD] Order ID 584762021: Ask 1 @ 12.94
 Top Bid: 12.26 x 1
 Top Ask: 12.64 x 1
-Top Bid: 12.26 x 1
-Top Ask: 12.64 x 1
 [CANCEL] Order ID 584762021: Ask  @ 1
-Top Bid: 12.26 x 1
-Top Ask: 12.64 x 1
 Processing T-F-C sequence: Trade on B side, canceling order 583305389
 Top Bid: 12.26 x 1
 Top Ask: 12.64 x 1
@@ -16787,8 +16721,6 @@ Top Ask: 13.11 x 1
 [ADD] Order ID 614408789: Bid 100 @ 11.43
 Top Bid: 12.38 x 1
 Top Ask: 13.11 x 1
-Top Bid: 12.38 x 1
-Top Ask: 13.11 x 1
 [CANCEL] Order ID 584891017: Ask  @ 100
 Top Bid: 12.38 x 1
 Top Ask: 13.11 x 1
@@ -16904,8 +16836,6 @@ Top Ask: 12.95 x 1
 Top Bid: 12.48 x 1
 Top Ask: 12.95 x 1
 [ADD] Order ID 621115469: Ask 100 @ 12.96
-Top Bid: 12.48 x 1
-Top Ask: 12.95 x 1
 Top Bid: 12.48 x 1
 Top Ask: 12.95 x 1
 [CANCEL] Order ID 621057277: Ask  @ 100
@@ -17549,11 +17479,9 @@ Top Bid: 9.85 x 1
 Top Bid: 9.85 x 1
 Top Ask: 17.93 x 1
 [ADD] Order ID 643783525: Bid 100 @ 9.84
-[DBG] EOF: Processing remaining buffered row. Action: A, Order ID: 643783529
 Top Bid: 9.85 x 1
 Top Ask: 17.93 x 1
 [ADD] Order ID 643783529: Ask 100 @ 17.85
-[DBG] EOF: Processing remaining buffered row. Action: A, Order ID: 644971685
 Top Bid: 9.85 x 1
 Top Ask: 17.85 x 1
 [ADD] Order ID 644971685: Ask 60 @ 16.25

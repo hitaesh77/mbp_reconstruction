@@ -120,6 +120,16 @@ private:
 
     void add_to_buffer(std::vector<std::string> row) {
         char action = row[5][0];
+        char side = row[6][0];
+
+        if (action == 'T' && side == 'N') {
+            double price = std::stod(row[7]);
+            int size = std::stoi(row[8]);
+
+            get_snapshot(row, 'T', 'N', 0, price, size, 0); // T, N combo
+            
+            return;
+        }
 
         // buffer empty
         if (buffer_rows.empty() && action != 'T') {
