@@ -29,8 +29,8 @@ const int COL_WIDTH_MBP_CT = COL_WIDTH_COUNT;
 
 // DEBUG PRINT FOR ADDING ORDER
 #ifdef DEBUG
-inline void debug_log_order_add(int order_id, char side, int size, double price){
-    if (debug_log_file.is_open()){
+inline void debug_log_order_add(int order_id, char side, int size, double price) {
+    if (debug_log_file.is_open()) {
         debug_log_file << "[ADD] Order ID " << order_id << ": "
                        << (side == 'B' ? "Bid" : "Ask") << " "
                        << size << " @ " << price << std::endl;
@@ -42,8 +42,8 @@ inline void debug_log_order_add(int, char, int, double) {}
 
 // DEBUG PRINT FOR CANCELLING ORDER
 #ifdef DEBUG
-inline void debug_log_order_cancel(int order_id, char side, double price){
-    if (debug_log_file.is_open()){
+inline void debug_log_order_cancel(int order_id, char side, double price) {
+    if (debug_log_file.is_open()) {
         debug_log_file << "[CANCEL] Order ID " << order_id << ": "
                        << (side == 'B' ? "Bid" : "Ask") << " "
                        << " @ " << price << std::endl;
@@ -55,13 +55,13 @@ inline void debug_log_order_cancel(int, char, double) {}
 
 // DEBUG PRINT FOR GETTING TOP OF BOOK
 #ifdef DEBUG
-inline void debug_log_top_of_book(std::map<double, std::list<int>> asks, std::map<double, std::list<int>, std::greater<>> bids){
-    if (debug_log_file.is_open()){
+inline void debug_log_top_of_book(std::map<double, std::list<int>> asks, std::map<double, std::list<int>, std::greater<>> bids) {
+    if (debug_log_file.is_open()) {
         if (!bids.empty()){
             auto top_bid = *bids.begin();
             debug_log_file << "Top Bid: " << top_bid.first << " x " << top_bid.second.size() << "\n";
         }
-        if (!asks.empty()){
+        if (!asks.empty()) {
             auto top_ask = *asks.begin();
             debug_log_file << "Top Ask: " << top_ask.first << " x " << top_ask.second.size() << "\n";
         }
@@ -73,8 +73,8 @@ inline void debug_log_top_of_book(std::map<double, std::list<int>>, std::map<dou
 
 // DEBUG PRINT FOR SKIPPING TFC WHEN SIDE = N
 #ifdef DEBUG
-inline void debug_log_tfc_skip(){
-    if (debug_log_file.is_open()){
+inline void debug_log_tfc_skip() {
+    if (debug_log_file.is_open()) {
         debug_log_file << "Skipping T-F-C sequence with side 'N'" << std::endl;
     }
 }
@@ -84,8 +84,8 @@ inline void debug_log_tfc_skip() {}
 
 // DEBUG PRINT FOR PROCESSING TFC CANCEL
 #ifdef DEBUG
-inline void debug_log_process_tfc(char side, std::vector<std::string> cancel_row){
-    if (debug_log_file.is_open()){
+inline void debug_log_process_tfc(char side, std::vector<std::string> cancel_row) {
+    if (debug_log_file.is_open()) {
         debug_log_file << "Processing T-F-C sequence: Trade on " << side
                        << " side, canceling order " << cancel_row[10] << std::endl;
     }
@@ -96,8 +96,8 @@ inline void debug_log_process_tfc(char, std::vector<std::string>) {}
 
 // DEBUG PRINT FOR PROCESSING TFC CANCEL
 #ifdef DEBUG
-inline void debug_log_eof_buffer(std::deque<std::vector<std::string>> buffer_rows){
-    if (debug_log_file.is_open()){
+inline void debug_log_eof_buffer(std::deque<std::vector<std::string>> buffer_rows) {
+    if (debug_log_file.is_open()) {
         debug_log_file << "[DBG] EOF: Processing remaining buffered row. Action: " << buffer_rows.front()[5] << ", Order ID: " << buffer_rows.front()[10] << std::endl;
     }
 }
@@ -107,8 +107,8 @@ inline void debug_log_eof_buffer(std::deque<std::vector<std::string>>) {}
 
 // DEBUG PRINT FOR MBP LOG HEADER
 #ifdef DEBUG
-inline void debug_log_mbp_header(){
-    if (debug_log_mbp_file.is_open()){
+inline void debug_log_mbp_header() {
+    if (debug_log_mbp_file.is_open()) {
         debug_log_mbp_file
             << std::left
             << std::setw(COL_WIDTH_ORDER_ID) << "order_id"
@@ -119,7 +119,7 @@ inline void debug_log_mbp_header(){
             << std::setw(COL_WIDTH_SIZE) << "size";
 
         // // Loop for MBP levels (00 to 09)
-        for (int i = 0; i < 10; ++i){
+        for (int i = 0; i < 10; ++i) {
             std::ostringstream ss_bid_px, ss_bid_sz, ss_bid_ct, ss_ask_px, ss_ask_sz, ss_ask_ct;
             ss_bid_px << "bid_px_" << i << std::setw(5);
             ss_bid_sz << "bid_sz_" << i << std::setw(5);
@@ -147,8 +147,8 @@ inline void debug_log_mbp_header() {}
 
 // DEBUG PRINT FOR MBP OASPS
 #ifdef DEBUG
-inline void debug_log_mbp_oasps(int order_id, char action, char side, int depth, double price, int size){
-    if (debug_log_mbp_file.is_open()){
+inline void debug_log_mbp_oasps(int order_id, char action, char side, int depth, double price, int size) {
+    if (debug_log_mbp_file.is_open()) {
         debug_log_mbp_file
             << std::left
             << std::setw(COL_WIDTH_ORDER_ID) << order_id

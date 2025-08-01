@@ -6,6 +6,7 @@
 #include <map>
 #include <list>
 #include <deque>
+#include <iomanip>
 
 #include "debug_utils.h"
 
@@ -40,18 +41,27 @@ std::ofstream debug_log_file("logs.txt", std::ios::trunc);
 std::ofstream debug_log_mbp_file("mbp_logs.txt", std::ios::trunc);
 #endif
 
-struct Order
-{
+struct Order {
     char side; // 'B' for Bid, 'A' for Ask
     double price;
     int size;
 };
 
-class OrderBook
-{
+class OrderBook {
 public:
-    void load_csv(const std::string &filename)
-    {
+    OrderBook() {
+        // Open output CSV file and write header
+        output_file.open("output.csv");
+        write_csv_header();
+    }
+    
+    ~OrderBook() {
+        if (output_file.is_open()) {
+            output_file.close();
+        }
+    }
+
+    void load_csv(const std::string &filename) {
         debug_log_mbp_header();
 
         std::ifstream file(filename);
@@ -59,8 +69,7 @@ public:
 
         std::getline(file, line); // skip first row
 
-        while (std::getline(file, line))
-        {
+        while (std::getline(file, line)) {
             std::stringstream ss(line);
             std::string cell;
             std::vector<std::string> row;
@@ -82,14 +91,33 @@ public:
     }
 
 private:
+    std::ofstream output_file;
     std::unordered_map<int, Order> orders;
     std::deque<std::vector<std::string>> buffer_rows;
+    int row_index = 0;
 
     // maps that hold price level as key, and a list of order_ids as values
     std::map<double, std::list<int>, std::greater<>> bids;
     std::map<double, std::list<int>> asks;
 
-    void add_to_buffer(std::vector<std::string> row){
+    void write_csv_header() {
+        output_file << " ,ts_recv,ts_event,rtype,publisher_id,instrument_id,action,side,depth,price,size,flags,ts_in_delta,sequence";
+        
+        for (int i = 0; i < 10; i++) {
+            output_file << ",bid_px_" << std::setfill('0') << std::setw(2) << i
+                        << ",bid_sz_" << std::setfill('0') << std::setw(2) << i
+                        << ",bid_ct_" << std::setfill('0') << std::setw(2) << i;
+            
+            output_file << ",ask_px_" << std::setfill('0') << std::setw(2) << i
+                        << ",ask_sz_" << std::setfill('0') << std::setw(2) << i
+                        << ",ask_ct_" << std::setfill('0') << std::setw(2) << i;
+        }
+
+        output_file << ",symbol,order_id";
+        output_file << "\n";
+    }
+
+    void add_to_buffer(std::vector<std::string> row) {
         char action = row[5][0];
 
         // buffer empty
@@ -107,7 +135,7 @@ private:
         }
     }
 
-    void process_buffer_rows(){
+    void process_buffer_rows() {
         if (buffer_rows.size() != 3) return;
         
         const auto &row1 = buffer_rows[0];
@@ -119,13 +147,10 @@ private:
         char action3 = row3[5][0];
 
         // Check for T-F-C sequence
-        if (action1 == 'T' && action2 == 'F' && action3 == 'C')
-        {
+        if (action1 == 'T' && action2 == 'F' && action3 == 'C') {
             handle_trade_sequence(row1, row2, row3);
             buffer_rows.clear();
-        }
-        else
-        {
+        } else {
             // Not a T-F-C sequence, process first row normally and shift buffer
             process_row(buffer_rows.front());
             buffer_rows.pop_front();
@@ -148,8 +173,7 @@ private:
         process_row(cancel_row);
     }
 
-    void process_row(const std::vector<std::string> &row)
-    {
+    void process_row(const std::vector<std::string> &row) {
         debug_log_top_of_book(asks, bids);
         char action = row[5][0];
 
@@ -158,13 +182,16 @@ private:
         }
 
         char side = row[6][0];
+
+        if (side == 'N') {
+            return;
+        }
+        
         double price = std::stod(row[7]);
         int size = std::stoi(row[8]);
         int order_id = std::stoi(row[10]);
 
-        get_snapshot(order_id, action, side, 0, price, size);
-
-        switch(action){
+        switch(action) {
             case 'A':
                 debug_log_order_add(order_id, side, size, price);
                 add_order(order_id, price, side, size);
@@ -178,54 +205,127 @@ private:
             case 'T':
             case 'F':
             default:
-                break;
+                return;
         }
+
+        int depth = calculate_depth(side, price);
+
+        get_snapshot(row, action, side, depth, price, size, order_id);
     }
 
-    void get_snapshot(int order_id, char action, char side, int depth, double price, int size){
+    int calculate_depth(char side, double price) {
+        int depth = 0;
+        
+        if (side == 'B') {
+            // For bids, count levels above this price
+            for (auto it = bids.begin(); it != bids.end() && it->first > price; ++it) {
+                depth++;
+            }
+        } else if (side == 'A') {
+            // For asks, count levels below this price
+            for (auto it = asks.begin(); it != asks.end() && it->first < price; ++it) {
+                depth++;
+            }
+        }
+        
+        return depth;
+    }
+
+    void get_snapshot(const std::vector<std::string> &row, char action, char side, int depth, double price, int size, int order_id) {
         auto bid_it = bids.begin();
         auto ask_it = asks.begin();
 
+        std::string ts_recv = row[0];
+        std::string ts_event = row[1];
+        std::string rtype = row[2];
+        std::string publisher_id = row[3];
+        std::string instrument_id = row[4];
+        std::string channel_id = row[9];
+        std::string flags = row[11];
+        std::string ts_in_delta = row[12];
+        std::string sequence = row[13];
+        std::string symbol = row[14];
+
+        // debug output
         debug_log_mbp_oasps(order_id, action, side, depth, price, size);
 
-        for (int price_level = 0; price_level < 10; price_level++){
+        // csv output
+        output_file << row_index << "," << ts_recv << "," << ts_event << "," << rtype << "," 
+                    << publisher_id << "," << instrument_id << "," << action << "," 
+                    << side << "," << depth << "," << std::fixed << std::setprecision(2) << price 
+                    << "," << size << "," << flags << "," << ts_in_delta << "," << sequence;
+
+        for (int price_level = 0; price_level < 10; price_level++) {
             std::string bid_px = "", bid_sz = "", bid_ct = "";
             std::string ask_px = "", ask_sz = "", ask_ct = "";
             
-            if (bid_it != bids.end()){
-                bid_px = std::to_string(bid_it->first);
-                bid_sz = std::to_string(sum_size(bid_it->second));
-                bid_ct = std::to_string(bid_it->second.size());
+            if (bid_it != bids.end()) {
+                double bid_price = bid_it->first;
+                int bid_size = sum_size(bid_it->second);
+                int bid_count = bid_it->second.size();
+
+                output_file << "," << std::fixed << std::setprecision(2) << bid_price
+                        << "," << bid_size << "," << bid_count;
+                
+                #ifdef DEBUG
+                bid_px = std::to_string(bid_price);
+                bid_sz = std::to_string(bid_size);
+                bid_ct = std::to_string(bid_count);
+                #endif
+
                 bid_it++;
+            } else {
+                output_file << ",0,0,0";
             }
 
-            if (ask_it != asks.end()){
+            if (ask_it != asks.end()) {
+                double ask_price = ask_it->first;
+                int ask_size = sum_size(ask_it->second);
+                int ask_count = ask_it->second.size();
+            
+                output_file << "," << std::fixed << std::setprecision(2) << ask_price
+                            << "," << ask_size << "," << ask_count;
+
                 ask_px = std::to_string(ask_it->first);
                 ask_sz = std::to_string(sum_size(ask_it->second));
                 ask_ct = std::to_string(ask_it->second.size());
+
+                #ifdef DEBUG
+                std::string ask_px = std::to_string(ask_price);
+                std::string ask_sz = std::to_string(ask_size);
+                std::string ask_ct = std::to_string(ask_count);
+                #endif
+
                 ask_it++;
+            } else {
+                output_file << ",0,0,0";
             }
 
             debug_log_levels(bid_px, bid_sz, bid_ct, ask_px, ask_sz, ask_ct);
         }
+
+        output_file << "," << symbol << "," << order_id << "\n";
+        output_file.flush();
+
+        row_index++;
 
         #ifdef DEBUG
         debug_log_mbp_file << std::endl;
         #endif
     }
 
-    void add_order(int order_id, double price, char side, int size){
+    void add_order(int order_id, double price, char side, int size) {
         Order order = { side, price, size};
         orders[order_id] = order;
         
-        if (side == 'A'){
+        if (side == 'A') {
             asks[price].push_back(order_id);
-        } else if (side == 'B'){
+        } else if (side == 'B') {
             bids[price].push_back(order_id);
         }
     }
 
-    void cancel_order(int order_id){
+    void cancel_order(int order_id) {
         auto it = orders.find(order_id);
         if (it == orders.end()) return;
 
@@ -233,11 +333,11 @@ private:
         double price = order_to_cancel.price;
         char side = order_to_cancel.side;
 
-        if (side == 'A'){
+        if (side == 'A') {
             auto &asks_list = asks[price];
             asks_list.remove(order_id);
             if (asks_list.empty()) asks.erase(price);
-        } else if (side == 'B'){
+        } else if (side == 'B') {
             auto &bids_list = bids[price];
             bids_list.remove(order_id);
             if (bids_list.empty()) bids.erase(price);
@@ -256,8 +356,7 @@ private:
 
 };
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
 
     std::string filename = argv[1];
 
