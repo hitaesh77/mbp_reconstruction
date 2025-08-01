@@ -33,6 +33,7 @@ using namespace std;
         a) create a snapshot at every row that is processed
         b) start by printing it in a output_logs.txt file to cross referene with mbp.csv
         c) build output csv
+            i) implement logic to determine if a snapshot should be added to csv
 
  ----------------------------------------------------------------------------------------------------------- */
 
@@ -165,6 +166,7 @@ private:
         char trade_side = trade_row[6][0];
         if (trade_side == 'N') {
             debug_log_tfc_skip();
+            get_snapshot(trade_row, 'T', 'N', 0, 0, 0, 0); // might remove
             return;
         }
 
@@ -175,42 +177,43 @@ private:
 
     void process_row(const std::vector<std::string> &row) {
         debug_log_top_of_book(asks, bids);
+
         char action = row[5][0];
 
         if (action == 'R') {
+            get_snapshot(row, action, 'N', 0, 0, 0, 0);
             return;
         }
 
         char side = row[6][0];
 
-        if (side == 'N') {
-            return;
-        }
-        
         double price = std::stod(row[7]);
         int size = std::stoi(row[8]);
         int order_id = std::stoi(row[10]);
 
+        bool book_changed = false;
+
         switch(action) {
             case 'A':
                 debug_log_order_add(order_id, side, size, price);
-                add_order(order_id, price, side, size);
+                book_changed = add_order(order_id, price, side, size);
                 break;
             
             case 'C':
                 debug_log_order_cancel(order_id, side, size);
-                cancel_order(order_id);
+                book_changed = cancel_order(order_id);
                 break;
 
             case 'T':
             case 'F':
             default:
-                return;
+                break;
         }
 
-        int depth = calculate_depth(side, price);
-
-        get_snapshot(row, action, side, depth, price, size, order_id);
+        if (book_changed) {
+            int depth = calculate_depth(side, price);
+            get_snapshot(row, action, side, depth, price, size, order_id);
+        }
     }
 
     int calculate_depth(char side, double price) {
@@ -238,6 +241,7 @@ private:
         std::string ts_recv = row[0];
         std::string ts_event = row[1];
         std::string rtype = row[2];
+        rtype = "10";
         std::string publisher_id = row[3];
         std::string instrument_id = row[4];
         std::string channel_id = row[9];
@@ -250,7 +254,7 @@ private:
         debug_log_mbp_oasps(order_id, action, side, depth, price, size);
 
         // csv output
-        output_file << row_index << "," << ts_recv << "," << ts_event << "," << rtype << "," 
+        output_file << row_index << "," << ts_event << "," << ts_event << "," << rtype << "," 
                     << publisher_id << "," << instrument_id << "," << action << "," 
                     << side << "," << depth << "," << std::fixed << std::setprecision(2) << price 
                     << "," << size << "," << flags << "," << ts_in_delta << "," << sequence;
@@ -275,7 +279,7 @@ private:
 
                 bid_it++;
             } else {
-                output_file << ",0,0,0";
+                output_file << ",,0,0";
             }
 
             if (ask_it != asks.end()) {
@@ -298,7 +302,7 @@ private:
 
                 ask_it++;
             } else {
-                output_file << ",0,0,0";
+                output_file << ",,0,0";
             }
 
             debug_log_levels(bid_px, bid_sz, bid_ct, ask_px, ask_sz, ask_ct);
@@ -314,36 +318,80 @@ private:
         #endif
     }
 
-    void add_order(int order_id, double price, char side, int size) {
+    bool add_order(int order_id, double price, char side, int size) {
         Order order = { side, price, size};
         orders[order_id] = order;
         
+        std::map<double, std::list<int>, std::greater<>> *book = nullptr;
         if (side == 'A') {
             asks[price].push_back(order_id);
+            
+            int level = 0;
+            for (const auto& [p, _] : asks) {
+                if (++level > 10) break;
+                if (p == price) return true;
+            }
+
         } else if (side == 'B') {
             bids[price].push_back(order_id);
+            
+            int level = 0;
+            for (const auto& [p, _] : bids) {
+                if (++level > 10) break;
+                if (p == price) return true;
+            }   
         }
+
+        return false;
     }
 
-    void cancel_order(int order_id) {
+    bool cancel_order(int order_id) {
         auto it = orders.find(order_id);
-        if (it == orders.end()) return;
+        if (it == orders.end()) return false;
 
         Order order_to_cancel = it->second;
         double price = order_to_cancel.price;
         char side = order_to_cancel.side;
 
+        bool was_in_top_10 = false;
+
         if (side == 'A') {
-            auto &asks_list = asks[price];
-            asks_list.remove(order_id);
-            if (asks_list.empty()) asks.erase(price);
+            auto price_it = asks.find(price);
+            if (price_it != asks.end()) {
+
+                // book changed logic
+                int level = 1;
+                for (auto it = asks.begin(); it != price_it && level <= 10; ++it, ++level) {}
+                was_in_top_10 = (level <= 10);
+                
+                // remove order logic
+                price_it->second.remove(order_id);
+                if (price_it->second.empty()) {
+                    asks.erase(price_it);
+                }
+            }
+
         } else if (side == 'B') {
-            auto &bids_list = bids[price];
-            bids_list.remove(order_id);
-            if (bids_list.empty()) bids.erase(price);
+            auto price_it = bids.find(price);
+            if (price_it != bids.end()) {
+
+                // book changed logic
+                int level = 1;
+                for (auto it = bids.begin(); it != price_it && level <= 10; ++it, ++level) {}
+                was_in_top_10 = (level <= 10);
+                
+
+                // remove order logic
+                price_it->second.remove(order_id);
+                if (price_it->second.empty()) {
+                    bids.erase(price_it);
+                }
+            }
         }
 
         orders.erase(order_id);
+
+        return was_in_top_10;
     }
 
     int sum_size(std::list<int>& order_ids) {
