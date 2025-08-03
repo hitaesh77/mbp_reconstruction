@@ -17,12 +17,12 @@ Overview:
 
         make run_release
 
-    This will:
-      - Compile the source with optimization flags
-      - Produce an executable named 'reconstruction_mbp'
-      - Run the program on 'mbo.csv' (modifiable via Makefile or CLI args)
+This will:
+  - Compile the source with optimization flags
+  - Produce an executable named 'reconstruction_mbp'
+  - Run the program on 'mbo.csv' (modifiable via Makefile or CLI args)
 
-    By default, the output will be saved as 'output.csv'.
+By default, the output will be saved as 'output.csv'.
 
 
 ## Features & Implementation Notes:
@@ -32,31 +32,31 @@ Overview:
         std::unordered_map<int, Order> is used for constant time 
         order lookups by order_id.
     
-    - Ordered Maps:
-        std::map<double, std::list<int>, std::greater<>> for bids 
-        (descending) and std::map<double, std::list<int>> for asks 
-        (ascending), giving efficient O(log n) insertions and top-level access.
+- Ordered Maps:
+    std::map<double, std::list<int>, std::greater<>> for bids 
+    (descending) and std::map<double, std::list<int>> for asks 
+    (ascending), giving efficient O(log n) insertions and top-level access.
 
   Core Logic:
-    - MBO Parsing:
-        A CSV reader extracts and parses each row while skipping the 
-        initial ‘R’ clear row.
+- MBO Parsing:
+    A CSV reader extracts and parses each row while skipping the 
+    initial ‘R’ clear row.
+        
+- OrderBook Maintenance:
+    Handled using add_order and cancel_order, updating both price 
+    levels and individual orders.
 
-    - OrderBook Maintenance:
-        Handled using add_order and cancel_order, updating both price 
-        levels and individual orders.
+- Snapshot Generation:
+    At every change in top 10 price levels, a full MBP-10 snapshot 
+    is created.
 
-    - Snapshot Generation:
-        At every change in top 10 price levels, a full MBP-10 snapshot 
-        is created.
+- T-F-C Handling:
+    Special handling buffers sequences of T -> F -> C, applying 
+    the cancel on the side opposite of the trade (since that’s 
+    the book side).
 
-    - T-F-C Handling:
-        Special handling buffers sequences of T -> F -> C, applying 
-        the cancel on the side opposite of the trade (since that’s 
-        the book side).
-
-    - Ignored Trades:
-        Trades with side 'N' are ignored, per spec.
+- Ignored Trades:
+    Trades with side 'N' are ignored, per spec.
 
   Debugging:
     Custom debug_utils.h was used to log intermediate states 
@@ -87,29 +87,29 @@ Overview:
 
 ## Known Limitations:
 
-    While correctness was a priority, some discrepancies still exist 
-    between the generated output.csv and the provided mbp.csv 
-    reference file. Despite extensive debugging and validation, 
-    a few corner cases could not be resolved within the timeframe. 
-    Logs and diffs have been included to aid further diagnosis.
+While correctness was a priority, some discrepancies still exist 
+between the generated output.csv and the provided mbp.csv 
+reference file. Despite extensive debugging and validation, 
+a few corner cases could not be resolved within the timeframe. 
+Logs and diffs have been included to aid further diagnosis.
 
 
 ## Future Work:
 
-    To further improve this project, I plan to:
+To further improve this project, I plan to:
 
-    - Modularize Further:
-        Extract snapshot logic, order processing, and file I/O into 
-        dedicated classes to improve code readability and testability.
+- Modularize Further:
+    Extract snapshot logic, order processing, and file I/O into 
+    dedicated classes to improve code readability and testability.
 
-    - Add Unit Tests:
-        Especially for sequence handling (T-F-C), edge cases, and 
-        price level updates.
+- Add Unit Tests:
+    Especially for sequence handling (T-F-C), edge cases, and 
+    price level updates.
 
-    - Parallel Parsing (Future Idea):
-        If permitted by the data format, consider pipelining parsing 
-        and snapshot generation.
+- Parallel Parsing (Future Idea):
+    If permitted by the data format, consider pipelining parsing 
+    and snapshot generation.
 
-    - Performance Profiling:
-        Integrate tools like valgrind, perf, or gprof to pinpoint 
-        further bottlenecks.
+- Performance Profiling:
+    Integrate tools like valgrind, perf, or gprof to pinpoint 
+    further bottlenecks.
