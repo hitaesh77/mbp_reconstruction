@@ -7,7 +7,7 @@ Overview:
 
 =======================================================================
 
-How to Run:
+## How to Run:
 
   Prerequisites:
     - C++17 compatible compiler
@@ -27,7 +27,7 @@ How to Run:
 
 =======================================================================
 
-Features & Implementation Notes:
+## Features & Implementation Notes:
 
   Data Structures:
     - Unordered Map:
@@ -68,7 +68,7 @@ Features & Implementation Notes:
 
 =======================================================================
 
-Optimization Strategies:
+## Optimization Strategies:
 
   Efficient Data Structures:
     - unordered_map for constant time lookups
@@ -89,7 +89,7 @@ Optimization Strategies:
 
 =======================================================================
 
-Known Limitations:
+## Known Limitations:
 
     While correctness was a priority, some discrepancies still exist 
     between the generated output.csv and the provided mbp.csv 
@@ -99,7 +99,7 @@ Known Limitations:
 
 =======================================================================
 
-Future Work:
+## Future Work:
 
     To further improve this project, I plan to:
 
@@ -115,16 +115,6 @@ Future Work:
         If permitted by the data format, consider pipelining parsing 
         and snapshot generation.
 
-    - Better Logging Control:
-        Use a logging framework with levels (INFO, DEBUG, ERROR) and 
-        dynamic toggles.
-
     - Performance Profiling:
         Integrate tools like valgrind, perf, or gprof to pinpoint 
         further bottlenecks.
-
-    - Streaming Input Support:
-        Modify implementation to handle live streaming data for 
-        real-time use.
-
-=======================================================================
