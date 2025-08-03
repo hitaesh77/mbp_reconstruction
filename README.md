@@ -62,7 +62,7 @@ Core Logic:
 
 Debugging:
 
-Custom debug_utils.h was used to log intermediate states 
+- Custom debug_utils.h was used to log intermediate states 
 (top-of-book, missed book change, T-F-C processing, etc.) for 
 validation. Comparison with provided mbp.csv was done using 
 Diffchecker Excel Compare.
