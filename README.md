@@ -27,8 +27,9 @@ By default, the output will be saved as 'output.csv'.
 
 ## Features & Implementation Notes:
 
-  Data Structures:
-    - Unordered Map:
+Data Structures:
+    
+- Unordered Map:
         std::unordered_map<int, Order> is used for constant time 
         order lookups by order_id.
     
@@ -37,7 +38,8 @@ By default, the output will be saved as 'output.csv'.
     (descending) and std::map<double, std::list<int>> for asks 
     (ascending), giving efficient O(log n) insertions and top-level access.
 
-  Core Logic:
+Core Logic:
+
 - MBO Parsing:
     A CSV reader extracts and parses each row while skipping the 
     initial ‘R’ clear row.
@@ -58,11 +60,12 @@ By default, the output will be saved as 'output.csv'.
 - Ignored Trades:
     Trades with side 'N' are ignored, per spec.
 
-  Debugging:
-    Custom debug_utils.h was used to log intermediate states 
-    (top-of-book, missed book change, T-F-C processing, etc.) for 
-    validation. Comparison with provided mbp.csv was done using 
-    Diffchecker Excel Compare.
+Debugging:
+
+Custom debug_utils.h was used to log intermediate states 
+(top-of-book, missed book change, T-F-C processing, etc.) for 
+validation. Comparison with provided mbp.csv was done using 
+Diffchecker Excel Compare.
 
 
 ## Optimization Strategies:
