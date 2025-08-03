@@ -40,6 +40,10 @@ using namespace std;
         a) Get baseline metrics for optimization
             i) Get timing 
             ii) Get memory usage
+        b) optimize function parameters
+            i) used pass by reference to stop making so many variable copies
+        c) optimize per row operations
+            i) main one is the for loop for determining size (cached to increase speed)
 
  ----------------------------------------------------------------------------------------------------------- */
 
