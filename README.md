@@ -1,7 +1,4 @@
-=======================================================================
-README - MBP-10 Reconstruction from MBO Data
-=======================================================================
-
+# README - MBP-10 Reconstruction from MBO Data
 Overview:
     This project reconstructs the MBP-10 (Market By Price - Top 10 levels)
     order book from raw MBO (Market By Order) data using C++. The primary 
