@@ -5,7 +5,6 @@ Overview:
     goal is to maintain correctness while ensuring high performance 
     suitable for high-frequency trading environments.
 
-=======================================================================
 
 ## How to Run:
 
@@ -25,7 +24,6 @@ Overview:
 
     By default, the output will be saved as 'output.csv'.
 
-=======================================================================
 
 ## Features & Implementation Notes:
 
@@ -66,7 +64,6 @@ Overview:
     validation. Comparison with provided mbp.csv was done using 
     Diffchecker Excel Compare.
 
-=======================================================================
 
 ## Optimization Strategies:
 
@@ -97,7 +94,6 @@ Overview:
     a few corner cases could not be resolved within the timeframe. 
     Logs and diffs have been included to aid further diagnosis.
 
-=======================================================================
 
 ## Future Work:
 
