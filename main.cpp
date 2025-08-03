@@ -7,6 +7,7 @@
 #include <list>
 #include <deque>
 #include <iomanip>
+#include <chrono>
 
 #include "debug_utils.h"
 
@@ -34,6 +35,11 @@ using namespace std;
         b) start by printing it in a output_logs.txt file to cross referene with mbp.csv
         c) build output csv
             i) implement logic to determine if a snapshot should be added to csv
+    
+    4) Optimize code for better performance
+        a) Get baseline metrics for optimization
+            i) Get timing 
+            ii) Get memory usage
 
  ----------------------------------------------------------------------------------------------------------- */
 
@@ -118,7 +124,7 @@ private:
         output_file << "\n";
     }
 
-    void add_to_buffer(std::vector<std::string> row) {
+    void add_to_buffer(std::vector<std::string>& row) {
         char action = row[5][0];
         char side = row[6][0];
 
@@ -169,9 +175,9 @@ private:
     }
 
     void handle_trade_sequence(
-        std::vector<std::string> trade_row, 
-        std::vector<std::string> fill_row, 
-        std::vector<std::string> cancel_row) 
+        const std::vector<std::string> &trade_row, 
+        const std::vector<std::string> &fill_row, 
+        const std::vector<std::string> &cancel_row) 
     {
         char trade_side = trade_row[6][0];
         if (trade_side == 'N') {
@@ -327,7 +333,7 @@ private:
         }
 
         output_file << "," << symbol << "," << order_id << "\n";
-        output_file.flush();
+        // output_file.flush();
 
         row_index++;
 
@@ -418,15 +424,22 @@ private:
 
 int main(int argc, char *argv[]) {
 
+    auto start = std::chrono::high_resolution_clock::now();
+
     std::string filename = argv[1];
 
     OrderBook myOrderBook;
 
     myOrderBook.load_csv(filename);
 
+    auto end = std::chrono::high_resolution_clock::now();
+
     #ifdef DEBUG
     debug_log_file.close();
     #endif
+
+    std::chrono::duration<double> duration = end - start;
+    std::cout << "Execution time: " << duration.count() << " seconds" << std::endl;
 
     return 0;
 }
