@@ -84,7 +84,6 @@ Overview:
     - Used const std::vector<std::string>& to avoid copies
     - Consolidated file I/O and debug flushing to reduce overhead
 
-=======================================================================
 
 ## Known Limitations:
 
